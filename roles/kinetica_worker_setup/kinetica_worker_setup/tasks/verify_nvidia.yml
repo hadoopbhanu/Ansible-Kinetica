@@ -1,0 +1,14 @@
+---
+# roles/kinetica_node_setup/tasks/verify_nvidia.yml
+
+- name: Check if NVIDIA drivers are installed
+  command: nvidia-smi
+  register: nvidia_check
+  failed_when: false
+  ignore_errors: true
+
+- name: Fail if NVIDIA drivers are not installed or incorrect version
+  fail:
+    msg: "NVIDIA drivers are not installed or the version is incorrect. Expected version: 470.82.01."
+  when: nvidia_check.rc != 0 or '"470.82.01" not in nvidia_check.stdout'
+  ignore_errors: true  

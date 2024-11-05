@@ -1,0 +1,15 @@
+---
+- include_tasks: check_gpudb.yml
+
+- include_tasks: verify_java.yml 
+
+- include_tasks: verify_nvidia.yml
+  register: nvidia_check
+  ignore_errors: true  # Allow the playbook to continue if this task fails
+
+- include_tasks: install_nvidia_drivers.yml
+  when: nvidia_check is failed  # Run this only if the NVIDIA check fails
+
+- include_tasks: install_cuda.yml
+
+- include_tasks: install_python.yml

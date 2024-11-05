@@ -1,0 +1,18 @@
+# roles/kinetica_worker_setup/tasks/verify_java.yml
+
+- name: Check current Java version
+  command: java -version
+  register: java_check
+  ignore_errors: true
+
+- name: Install Java if the expected version is not found
+  apt:
+    name: openjdk-11-jdk
+    state: present
+  when: ansible_facts['pkg_mgr'] == 'apt' and '"11"' not in java_check.stderr
+
+- name: Install Java if the expected version is not found (RedHat)
+  yum:
+    name: java-11-openjdk
+    state: present
+  when: ansible_facts['pkg_mgr'] == 'yum' and '"11"' not in java_check.stderr
