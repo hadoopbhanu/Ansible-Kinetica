@@ -1,0 +1,6 @@
+ # roles/kinetica_node_setup/handlers/main.yml
+---
+- name: restart kinetica
+  service:
+    name: gpudb
+    state: restarted

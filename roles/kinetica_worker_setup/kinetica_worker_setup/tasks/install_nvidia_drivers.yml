@@ -1,0 +1,20 @@
+---
+# roles/kinetica_node_setup/tasks/install_nvidia_drivers.yml
+
+- name: Download NVIDIA driver 470.82.01
+  get_url:
+    url: "https://download.nvidia.com/XFree86/Linux-x86_64/470.82.01/NVIDIA-Linux-x86_64-470.82.01.run"
+    dest: "/tmp/NVIDIA-Linux-x86_64-470.82.01.run"
+    mode: '0755'
+  when: nvidia_check.rc != 0 or '"470.82.01" not in nvidia_check.stdout'
+
+- name: Run NVIDIA driver installer
+  command: "sh /tmp/NVIDIA-Linux-x86_64-470.82.01.run --silent"
+  args:
+    creates: "/usr/bin/nvidia-smi"
+  when: nvidia_check.rc != 0 or '"470.82.01" not in nvidia_check.stdout'
+
+- name: Clean up installer file
+  file:
+    path: "/tmp/NVIDIA-Linux-x86_64-470.82.01.run"
+    state: absent

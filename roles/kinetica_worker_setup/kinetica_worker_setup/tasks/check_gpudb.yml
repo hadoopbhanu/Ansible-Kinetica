@@ -1,0 +1,10 @@
+# roles/kinetica_node_setup/tasks/check_gpudb.yml
+---
+- name: Ensure /opt/gpudb/core/etc/gpudb.conf is uniform
+  copy:
+    src: gpudb.conf
+    dest: /opt/gpudb/core/etc/gpudb.conf
+    owner: gpudb
+    group: gpudb
+    mode: '0644'
+  notify: restart kinetica
