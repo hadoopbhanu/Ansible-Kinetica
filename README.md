@@ -1,4 +1,7 @@
 # Ansible Collection - hadoopbhanu.kinetica_cluster
+Contributed to Ansible_Galaxy Collection: https://galaxy.ansible.com/ui/repo/published/hadoopbhanu/kinetica_cluster
+![image](https://github.com/user-attachments/assets/87868e89-31d9-425a-a421-983182473165)
+
 
 # Kinetica Cluster Management Role
 
