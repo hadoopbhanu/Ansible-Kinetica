@@ -1,0 +1,31 @@
+---
+# roles/kinetica_node_setup/tasks/install_python.yml
+
+- name: Check Python version
+  command: python3 --version
+  register: python_check
+  failed_when: false
+  ignore_errors: true
+
+- name: Add deadsnakes PPA for Python 3.12 on Debian-based systems
+  apt_repository:
+    repo: ppa:deadsnakes/ppa
+    state: present
+  when: ansible_facts['pkg_mgr'] == 'apt' and "Python 3.12.3" not in python_check.stdout
+
+- name: Update apt cache after adding PPA
+  apt:
+    update_cache: yes
+  when: ansible_facts['pkg_mgr'] == 'apt' and "Python 3.12.3" not in python_check.stdout
+
+- name: Install Python 3.12.3 on Debian-based systems
+  apt:
+    name: python3.8
+    state: present
+  when: ansible_facts['pkg_mgr'] == 'apt' and "Python 3.12.3" not in python_check.stdout
+
+- name: Install Python 3.12.3 on RedHat-based systems
+  yum:
+    name: python38
+    state: present
+  when: ansible_facts['pkg_mgr'] == 'yum' and "Python 3.12.3" not in python_check.stdout

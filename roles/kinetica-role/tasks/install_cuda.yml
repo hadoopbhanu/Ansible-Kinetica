@@ -1,0 +1,35 @@
+---
+# roles/kinetica_node_setup/tasks/verify_and_install_nvidia.yml
+
+- name: Ensure development tools are installed
+  apt:
+    name: gcc
+    state: present
+  when: ansible_facts['pkg_mgr'] == 'apt'
+
+- name: Check if NVIDIA drivers are installed
+  command: nvidia-smi
+  register: nvidia_check
+  failed_when: false
+  ignore_errors: true
+
+- name: Install NVIDIA driver 470.82.01 if not installed or incorrect version
+  block:
+    - name: Download NVIDIA driver 470.82.01
+      get_url:
+        url: "https://download.nvidia.com/XFree86/Linux-x86_64/470.82.01/NVIDIA-Linux-x86_64-470.82.01.run"
+        dest: "/tmp/NVIDIA-Linux-x86_64-470.82.01.run"
+        mode: '0755'
+      when: nvidia_check.rc != 0 or '"470.82.01" not in nvidia_check.stdout'
+
+    - name: Install NVIDIA driver without GPU check
+      command: "sh /tmp/NVIDIA-Linux-x86_64-470.82.01.run --silent --no-kernel-module"
+      args:
+        creates: "/usr/bin/nvidia-smi"
+      when: nvidia_check.rc != 0 or '"470.82.01" not in nvidia_check.stdout'
+
+    - name: Clean up installer file
+      file:
+        path: "/tmp/NVIDIA-Linux-x86_64-470.82.01.run"
+        state: absent
+  when: nvidia_check.rc != 0 or '"470.82.01" not in nvidia_check.stdout'

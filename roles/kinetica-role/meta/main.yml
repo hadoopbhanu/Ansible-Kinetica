@@ -1,0 +1,29 @@
+# roles/kinetica_node_setup/meta/main.yml
+---
+dependencies: []
+
+galaxy_info:
+  author: bkoduri 
+  description: "An Ansible role for managing Kinetica cluster worker nodes, ensuring configuration consistency and dependency verification."
+  company: N/A
+  license: MIT
+  min_ansible_version: "2.9"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
+        - jammy
+    - name: RedHat
+      versions:
+        - 7
+        - 8
+    - name: Amazon
+      versions:
+        - 2
+  galaxy_tags:
+    - configuration_management
+    - Kinetica
+    - DevOps
+    - cluster_management
+
